@@ -1,0 +1,37 @@
+name: Decode iPhone Duo AR assets
+on:
+  push:
+    paths:
+      - 'iphone-duo/b64/**'
+      - '.github/workflows/iphone-duo-decode.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  decode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decode base64 assets
+        run: |
+          set -euo pipefail
+          mkdir -p iphone-duo
+          for f in iphone-duo/b64/*.b64; do
+            [ -f "$f" ] || continue
+            name=$(basename "$f" .b64)
+            base64 -d "$f" > "iphone-duo/$name"
+            echo "decoded $name ($(wc -c < "iphone-duo/$name") bytes)"
+          done
+          ls -la iphone-duo/
+      - name: Commit decoded binaries
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add iphone-duo/*.glb iphone-duo/*.usdz iphone-duo/*.png iphone-duo/model-viewer.min.js || true
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Decode iPhone Duo AR binary assets (GLB/USDZ/PNG/JS)"
+            git push
+          fi
