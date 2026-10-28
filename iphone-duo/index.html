@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>iPhone Duo en AR — tamaño real</title>
+  <script type="module" src="./model-viewer.min.js"></script>
+  <style>
+    :root {
+      --bg: #070b16;
+      --card: #121a2e;
+      --text: #eef2ff;
+      --muted: #9aa6c2;
+      --accent: #5b8cff;
+      --accent2: #a78bfa;
+      --ok: #34d399;
+      --border: rgba(255,255,255,.08);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100%; }
+    body { padding: 0 0 calc(28px + env(safe-area-inset-bottom)); }
+    header {
+      padding: 22px 20px 8px;
+      background: radial-gradient(120% 80% at 50% -20%, #1a2750 0%, transparent 60%);
+    }
+    h1 { margin: 0; font-size: 1.55rem; letter-spacing: -0.02em; }
+    .sub { color: var(--muted); margin-top: 6px; font-size: .95rem; line-height: 1.35; }
+    .viewer-wrap {
+      margin: 12px 14px 0;
+      border-radius: 22px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #10182c, #0a1020);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+      position: relative;
+    }
+    model-viewer {
+      width: 100%;
+      height: min(62vh, 520px);
+      --poster-color: transparent;
+      background: transparent;
+    }
+    .ar-badge {
+      position: absolute; top: 12px; left: 12px; z-index: 2;
+      background: rgba(15,23,42,.72); backdrop-filter: blur(8px);
+      border: 1px solid var(--border); color: var(--text);
+      font-size: .75rem; padding: 6px 10px; border-radius: 999px;
+    }
+    .controls {
+      display: grid; gap: 12px; padding: 16px 16px 0;
+    }
+    .seg {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+      background: var(--card); padding: 6px; border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+    .seg button {
+      appearance: none; border: 0; background: transparent; color: var(--muted);
+      padding: 12px 10px; border-radius: 10px; font-size: .95rem; font-weight: 600;
+    }
+    .seg button.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: white; box-shadow: 0 8px 20px rgba(91,140,255,.25);
+    }
+    .label { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 4px 2px 0; }
+    .ar-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; border: 0; border-radius: 16px; padding: 18px 16px;
+      font-size: 1.08rem; font-weight: 700; color: #041018;
+      background: linear-gradient(135deg, #6ee7b7, #5b8cff);
+      box-shadow: 0 14px 30px rgba(52,211,153,.22);
+      margin-top: 4px;
+    }
+    .ar-btn:active { transform: scale(.98); }
+    .fallback {
+      display: block; text-align: center; margin-top: 10px;
+      color: var(--accent); font-size: .92rem; text-decoration: none;
+    }
+    .fallback img { display: none; }
+    .specs {
+      margin: 18px 16px 0; padding: 16px; border-radius: 18px;
+      background: var(--card); border: 1px solid var(--border);
+    }
+    .specs h2 { margin: 0 0 10px; font-size: 1.05rem; }
+    .specs dl { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+    .specs dt { color: var(--muted); font-size: .78rem; }
+    .specs dd { margin: 2px 0 0; font-size: .95rem; font-weight: 600; }
+    .note {
+      margin: 14px 16px 0; color: var(--muted); font-size: .82rem; line-height: 1.45;
+      padding: 12px 14px; border-left: 3px solid var(--accent2);
+      background: rgba(167,139,250,.08); border-radius: 0 12px 12px 0;
+    }
+    footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top: 22px; padding: 0 16px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>iPhone Duo en tu habitación</h1>
+    <p class="sub">Realidad aumentada a <strong>tamaño real</strong> (AR Quick Look). Elige color y estado, luego toca el botón.</p>
+  </header>
+
+  <div class="viewer-wrap">
+    <div class="ar-badge">Escala 1:1 · metros</div>
+    <model-viewer
+      id="viewer"
+      src="./iphone-duo-closed-night-sky.glb"
+      ios-src="./iphone-duo-closed-night-sky.usdz"
+      poster="./poster-closed-night-sky.png"
+      alt="Modelo 3D del iPhone Duo a tamaño real"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
+      ar-scale="fixed"
+      camera-controls
+      touch-action="pan-y"
+      auto-rotate
+      rotation-per-second="18deg"
+      shadow-intensity="0.85"
+      exposure="1.05"
+      environment-image="neutral"
+      reveal="auto"
+    >
+      <button slot="ar-button" id="arSlotBtn" class="ar-btn" style="position:absolute;left:16px;right:16px;bottom:16px;width:auto;">
+        Ver en mi habitación
+      </button>
+    </model-viewer>
+  </div>
+
+  <div class="controls">
+    <div>
+      <div class="label">Color</div>
+      <div class="seg" id="colorSeg">
+        <button type="button" data-color="night-sky" class="active">Night Sky</button>
+        <button type="button" data-color="star-white">Star White</button>
+      </div>
+    </div>
+    <div>
+      <div class="label">Estado</div>
+      <div class="seg" id="stateSeg">
+        <button type="button" data-state="closed" class="active">Cerrado</button>
+        <button type="button" data-state="open">Abierto</button>
+      </div>
+    </div>
+    <button type="button" class="ar-btn" id="arBtn">Ver en mi habitación</button>
+    <a class="fallback" id="quickLookLink" rel="ar" href="./iphone-duo-closed-night-sky.usdz">
+      <img src="./poster-closed-night-sky.png" alt="iPhone Duo" />
+      Abrir con AR Quick Look (Safari iOS)
+    </a>
+  </div>
+
+  <section class="specs">
+    <h2>Medidas oficiales (Apple)</h2>
+    <dl>
+      <div>
+        <dt>Alto</dt>
+        <dd>117,8 mm</dd>
+      </div>
+      <div>
+        <dt>Peso</dt>
+        <dd>254 g</dd>
+      </div>
+      <div>
+        <dt>Cerrado</dt>
+        <dd>84,1 × 11,3 mm</dd>
+      </div>
+      <div>
+        <dt>Abierto</dt>
+        <dd>164,6 × 5,2 mm</dd>
+      </div>
+      <div>
+        <dt>Pantalla interior</dt>
+        <dd>7,6″ (7,58″ diag.)</dd>
+      </div>
+      <div>
+        <dt>Pantalla exterior</dt>
+        <dd>5,4″ (5,36″ diag.)</dd>
+      </div>
+    </dl>
+  </section>
+
+  <p class="note">
+    Reproducción 3D a escala real con las medidas publicadas por Apple en las especificaciones técnicas del iPhone Duo.
+    No es un modelo oficial de Apple. Colores: Night Sky y Star White · marco de titanio · FaceTime bajo pantalla · Touch ID en botón lateral.
+  </p>
+  <footer>Hecho para Enrique · AR Quick Look / model-viewer</footer>
+
+  <script>
+    const viewer = document.getElementById('viewer');
+    const colorSeg = document.getElementById('colorSeg');
+    const stateSeg = document.getElementById('stateSeg');
+    const quickLookLink = document.getElementById('quickLookLink');
+    const arBtn = document.getElementById('arBtn');
+    let color = 'night-sky';
+    let state = 'closed';
+
+    function fileBase() {
+      return `iphone-duo-${state}-${color}`;
+    }
+    function apply() {
+      const base = fileBase();
+      viewer.src = `./${base}.glb`;
+      viewer.iosSrc = `./${base}.usdz`;
+      viewer.poster = `./poster-${state}-${color}.png`;
+      quickLookLink.href = `./${base}.usdz`;
+      const img = quickLookLink.querySelector('img');
+      if (img) img.src = `./poster-${state}-${color}.png`;
+    }
+    function bindSeg(root, attr, setter) {
+      root.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        root.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        setter(btn.getAttribute(attr));
+        apply();
+      });
+    }
+    bindSeg(colorSeg, 'data-color', (v) => { color = v; });
+    bindSeg(stateSeg, 'data-state', (v) => { state = v; });
+
+    async function launchAR() {
+      apply();
+      // Prefer model-viewer's AR; fallback to Quick Look anchor on iOS
+      if (viewer.canActivateAR) {
+        try { await viewer.activateAR(); return; } catch (e) {}
+      }
+      // iOS Safari Quick Look fallback
+      quickLookLink.click();
+    }
+    arBtn.addEventListener('click', launchAR);
+    apply();
+  </script>
+</body>
+</html>
